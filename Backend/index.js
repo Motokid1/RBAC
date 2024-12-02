@@ -10,18 +10,17 @@ dotenv.config();
 
 const app = express();
 
-// CORS configuration to allow the frontend domain
+// CORS configuration
 const corsOptions = {
-  origin: 'https://rbac-mat9.vercel.app', // Allow only this origin
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'], // Allow all HTTP methods
-  allowedHeaders: ['Content-Type', 'Authorization'], // Allow these headers
-  credentials: true, // Include credentials if needed
-  preflightContinue: false, // Default is false, set it to true if the preflight request needs to be continued
-  optionsSuccessStatus: 204 // Some legacy browsers choke on 204
+  origin: 'http://127.0.0.1:5173', // Allow only the specific frontend origin
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allow necessary HTTP methods
+  allowedHeaders: ['Content-Type', 'Authorization'], // Allow necessary headers
+  preflightContinue: false, // Prevent continuing after handling preflight request
+  optionsSuccessStatus: 200, // Response status for successful OPTIONS request
 };
 
 // Middleware
-app.use(cors(corsOptions)); // Enable CORS for all routes
+app.use(cors(corsOptions)); // Enable CORS with custom options
 app.use(express.json()); // Parse JSON request bodies
 
 // Connect to MongoDB
