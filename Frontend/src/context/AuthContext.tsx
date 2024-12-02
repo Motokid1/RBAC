@@ -6,14 +6,16 @@ import React, {
   useCallback,
 } from "react";
 import { useNavigate } from "react-router-dom";
+import { SESSION_TIMEOUT } from "../config/env";
+import type { User } from "../types/auth";
 
 // Define the shape of our authentication context
 interface AuthContextType {
-  user: any; // Current user data
-  login: (userData: any) => void; // Login function
-  logout: () => void; // Logout function
-  updateUser: (userData: any) => void; // Update user data
-  isAuthenticated: boolean; // Authentication status
+  user: User | null;
+  login: (userData: User) => void;
+  logout: () => void;
+  updateUser: (userData: Partial<User>) => void;
+  isAuthenticated: boolean;
 }
 
 // Create the context with undefined default value
@@ -23,8 +25,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  // State management
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [sessionTimeout, setSessionTimeout] = useState<NodeJS.Timeout | null>(
     null
@@ -37,18 +38,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       clearTimeout(sessionTimeout);
     }
 
-    // Set new timeout for 4 minutes
+    // Set new timeout based on environment configuration
     const timeout = setTimeout(() => {
       logout();
       navigate("/login");
-    }, 4 * 60 * 1000);
+    }, SESSION_TIMEOUT);
 
     setSessionTimeout(timeout);
   }, [sessionTimeout, navigate]);
 
   // Initialize auth state from localStorage and set up activity listeners
   useEffect(() => {
-    // Check for stored user data
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
@@ -56,7 +56,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       resetSessionTimeout();
     }
 
-    // Setup activity monitoring
     const events = ["mousedown", "keydown", "scroll", "touchstart"];
 
     const resetOnActivity = () => {
@@ -65,12 +64,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       }
     };
 
-    // Add event listeners
     events.forEach((event) => {
       window.addEventListener(event, resetOnActivity);
     });
 
-    // Cleanup function
     return () => {
       if (sessionTimeout) {
         clearTimeout(sessionTimeout);
@@ -81,15 +78,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     };
   }, [resetSessionTimeout, isAuthenticated]);
 
-  // Login function
-  const login = (userData: any) => {
+  const login = (userData: User) => {
     setUser(userData);
     setIsAuthenticated(true);
     localStorage.setItem("user", JSON.stringify(userData));
     resetSessionTimeout();
   };
 
-  // Logout function
   const logout = () => {
     setUser(null);
     setIsAuthenticated(false);
@@ -99,14 +94,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  // Update user data function
-  const updateUser = (userData: any) => {
-    const updatedUser = { ...user, ...userData };
+  const updateUser = (userData: Partial<User>) => {
+    const updatedUser = { ...user, ...userData } as User;
     setUser(updatedUser);
     localStorage.setItem("user", JSON.stringify(updatedUser));
   };
 
-  // Provide auth context to children components
   return (
     <AuthContext.Provider
       value={{ user, login, logout, updateUser, isAuthenticated }}
