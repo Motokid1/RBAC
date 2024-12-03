@@ -1,25 +1,39 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { LogIn } from 'lucide-react';
-import { login } from '../api/auth';
-import { useAuth } from '../context/AuthContext';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { LogIn } from "lucide-react";
+import { login } from "../api/auth";
+import { useAuth } from "../context/AuthContext";
+import type { LoginData } from "../types/auth";
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [formData, setFormData] = useState<LoginData>({
+    email: "",
+    password: "",
+  });
+  const [error, setError] = useState("");
   const navigate = useNavigate();
   const { login: authLogin } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
+
     try {
-      const data = await login(email, password);
-      authLogin(data);
-      navigate('/dashboard');
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'An error occurred');
+      const userData = await login(formData);
+      authLogin(userData);
+      navigate("/dashboard");
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "An error occurred during login"
+      );
     }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
   };
 
   return (
@@ -40,21 +54,23 @@ const Login = () => {
             <div>
               <input
                 type="email"
+                name="email"
                 required
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Email address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={formData.email}
+                onChange={handleChange}
               />
             </div>
             <div>
               <input
                 type="password"
+                name="password"
                 required
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                value={formData.password}
+                onChange={handleChange}
               />
             </div>
           </div>

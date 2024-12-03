@@ -4,18 +4,19 @@ import type { RegisterData, LoginData, User } from "../types/auth";
 
 // Login user with email and password
 // Returns user data with JWT token
-export const login = async (credentials: LoginData): Promise<User> => {
+export const login = async ({ email, password }: LoginData): Promise<User> => {
   try {
-    console.log("API_URL:", API_URL); // Debugging the API URL
-    console.log("Login Credentials:", credentials); // Debugging credentials
-    const response = await axios.post(`${API_URL}/auth/login`, credentials);
-    console.log("Login Response:", response.data); // Debugging response
+    const response = await axios.post(`${API_URL}/auth/login`, {
+      email,
+      password,
+    });
     return response.data;
-  } catch (error: any) {
-    console.error("Login Error:", error.response?.data || error.message);
-    throw new Error(
-      error.response?.data?.message || "Failed to login. Check credentials."
-    );
+  } catch (error) {
+    // Properly handle and throw API errors
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.response?.data?.message || "Login failed");
+    }
+    throw error;
   }
 };
 
@@ -23,15 +24,13 @@ export const login = async (credentials: LoginData): Promise<User> => {
 // Returns created user data with JWT token
 export const register = async (userData: RegisterData): Promise<User> => {
   try {
-    console.log("Register Data:", userData); // Debugging user data
     const response = await axios.post(`${API_URL}/auth/register`, userData);
-    console.log("Register Response:", response.data); // Debugging response
     return response.data;
-  } catch (error: any) {
-    console.error("Register Error:", error.response?.data || error.message);
-    throw new Error(
-      error.response?.data?.message || "Failed to register user."
-    );
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.response?.data?.message || "Registration failed");
+    }
+    throw error;
   }
 };
 
@@ -43,9 +42,11 @@ export const getUsers = async (token: string): Promise<User[]> => {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;
-  } catch (error: any) {
-    console.error("Get Users Error:", error.response?.data || error.message);
-    throw new Error("Failed to fetch users.");
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.response?.data?.message || "Failed to fetch users");
+    }
+    throw error;
   }
 };
 
@@ -60,9 +61,11 @@ export const deleteUser = async (
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;
-  } catch (error: any) {
-    console.error("Delete User Error:", error.response?.data || error.message);
-    throw new Error("Failed to delete user.");
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.response?.data?.message || "Failed to delete user");
+    }
+    throw error;
   }
 };
 
@@ -73,7 +76,6 @@ export const updateProfile = async (
   token: string
 ): Promise<User> => {
   try {
-    console.log("Update Profile Data:", userData); // Debugging profile data
     const response = await axios.put(`${API_URL}/users/profile`, userData, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -81,11 +83,12 @@ export const updateProfile = async (
       },
     });
     return response.data;
-  } catch (error: any) {
-    console.error(
-      "Update Profile Error:",
-      error.response?.data || error.message
-    );
-    throw new Error("Failed to update profile.");
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(
+        error.response?.data?.message || "Failed to update profile"
+      );
+    }
+    throw error;
   }
 };

@@ -20,3 +20,9 @@ export interface LoginData {
   email: string;
   password: string;
 }
+
+// API response interface for error handling
+export interface ApiError {
+  message: string;
+  status?: number;
+}

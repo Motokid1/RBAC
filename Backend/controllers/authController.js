@@ -4,7 +4,7 @@ import User from "../models/User.js";
 // Generate JWT token for authentication
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: "4m", // Token expires in 4 minutes
+    expiresIn: "1m", // Token expires in 1 minute
   });
 };
 
