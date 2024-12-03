@@ -2,8 +2,10 @@ import axios from "axios";
 import { API_URL } from "../config/env";
 import type { RegisterData, LoginData, User } from "../types/auth";
 
+// Configure axios defaults
+axios.defaults.withCredentials = true;
+
 // Login user with email and password
-// Returns user data with JWT token
 export const login = async ({ email, password }: LoginData): Promise<User> => {
   try {
     const response = await axios.post(`${API_URL}/auth/login`, {
@@ -12,7 +14,6 @@ export const login = async ({ email, password }: LoginData): Promise<User> => {
     });
     return response.data;
   } catch (error) {
-    // Properly handle and throw API errors
     if (axios.isAxiosError(error)) {
       throw new Error(error.response?.data?.message || "Login failed");
     }
@@ -21,7 +22,6 @@ export const login = async ({ email, password }: LoginData): Promise<User> => {
 };
 
 // Register new user with provided data
-// Returns created user data with JWT token
 export const register = async (userData: RegisterData): Promise<User> => {
   try {
     const response = await axios.post(`${API_URL}/auth/register`, userData);
@@ -35,7 +35,6 @@ export const register = async (userData: RegisterData): Promise<User> => {
 };
 
 // Get list of users (admin/super_admin only)
-// Requires valid JWT token
 export const getUsers = async (token: string): Promise<User[]> => {
   try {
     const response = await axios.get(`${API_URL}/users`, {
@@ -51,7 +50,6 @@ export const getUsers = async (token: string): Promise<User[]> => {
 };
 
 // Delete user by ID (super_admin only)
-// Requires valid JWT token
 export const deleteUser = async (
   userId: string,
   token: string
@@ -69,8 +67,7 @@ export const deleteUser = async (
   }
 };
 
-// Update user profile (username and/or password)
-// Requires valid JWT token
+// Update user profile
 export const updateProfile = async (
   userData: { username: string; password?: string },
   token: string
