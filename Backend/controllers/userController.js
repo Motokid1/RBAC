@@ -1,11 +1,11 @@
-import User from "../models/User.js";
-import bcrypt from "bcryptjs";
+import User from '../models/User.js';
+import bcrypt from 'bcryptjs';
 
 // Get all users with 'user' role (Admin/Super Admin only)
 export const getUsers = async (req, res) => {
   try {
     // Fetch users excluding password field
-    const users = await User.find({ role: "user" }).select("-password");
+    const users = await User.find({ role: 'user' }).select('-password');
     res.json(users);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -16,18 +16,18 @@ export const getUsers = async (req, res) => {
 export const deleteUser = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
-
+    
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: 'User not found' });
     }
 
     // Prevent deletion of super admin accounts
-    if (user.role === "super_admin") {
-      return res.status(403).json({ message: "Cannot delete super admin" });
+    if (user.role === 'super_admin') {
+      return res.status(403).json({ message: 'Cannot delete super admin' });
     }
 
     await user.deleteOne();
-    res.json({ message: "User deleted successfully" });
+    res.json({ message: 'User deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -40,7 +40,7 @@ export const updateProfile = async (req, res) => {
     const user = await User.findById(req.user._id);
 
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: 'User not found' });
     }
 
     // Update username if provided

@@ -1,36 +1,31 @@
-import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { UserPlus } from "lucide-react";
-import { register } from "../api/auth";
-import { useAuth } from "../context/AuthContext";
-import {
-  validatePassword,
-  validateEmail,
-  getPasswordErrorMessage,
-  getEmailErrorMessage,
-} from "../utils/validations";
-import type { RegisterData } from "../types/auth";
+import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { UserPlus } from 'lucide-react';
+import { register } from '../api/auth';
+import { useAuth } from '../context/AuthContext';
+import { validatePassword, validateEmail, getPasswordErrorMessage, getEmailErrorMessage } from '../utils/validations';
+import type { RegisterData } from '../types/auth';
 
 const Register = () => {
   const [formData, setFormData] = useState<RegisterData>({
-    username: "",
-    email: "",
-    password: "",
-    role: "user",
+    username: '',
+    email: '',
+    password: '',
+    role: 'user',
   });
   const [errors, setErrors] = useState({
-    email: "",
-    password: "",
-    general: "",
+    email: '',
+    password: '',
+    general: ''
   });
   const navigate = useNavigate();
   const { login } = useAuth();
 
   const validateForm = (): boolean => {
     const newErrors = {
-      email: "",
-      password: "",
-      general: "",
+      email: '',
+      password: '',
+      general: ''
     };
     let isValid = true;
 
@@ -55,22 +50,20 @@ const Register = () => {
     try {
       const data = await register(formData);
       login(data);
-      navigate("/dashboard");
+      navigate('/dashboard');
     } catch (err: any) {
-      setErrors((prev) => ({
+      setErrors(prev => ({
         ...prev,
-        general: err.response?.data?.message || "An error occurred",
+        general: err.response?.data?.message || 'An error occurred'
       }));
     }
   };
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     // Clear errors when user starts typing
     if (e.target.name in errors) {
-      setErrors((prev) => ({ ...prev, [e.target.name]: "" }));
+      setErrors(prev => ({ ...prev, [e.target.name]: '' }));
     }
   };
 
@@ -153,7 +146,7 @@ const Register = () => {
               Register
             </button>
           </div>
-
+          
           <div className="text-center">
             <Link to="/login" className="text-indigo-600 hover:text-indigo-500">
               Already have an account? Sign in

@@ -6,8 +6,7 @@
 // - At least one number
 // - At least one special character (#?!@$%^&*-)
 export const validatePassword = (password: string): boolean => {
-  const passwordRegex =
-    /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+  const passwordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
   return passwordRegex.test(password);
 };
 
@@ -20,10 +19,10 @@ export const validateEmail = (email: string): boolean => {
 
 // User-friendly error message for password requirements
 export const getPasswordErrorMessage = (): string => {
-  return "Password must contain at least 8 characters, including uppercase, lowercase, number and special character (#?!@$%^&*-)";
+  return 'Password must contain at least 8 characters, including uppercase, lowercase, number and special character (#?!@$%^&*-)';
 };
 
 // User-friendly error message for email requirements
 export const getEmailErrorMessage = (): string => {
-  return "Please enter a valid Gmail address";
+  return 'Please enter a valid Gmail address';
 };

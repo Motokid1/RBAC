@@ -1,31 +1,28 @@
-import React, { useState } from "react";
-import { useAuth } from "../context/AuthContext";
-import { updateProfile } from "../api/auth";
-import { User } from "lucide-react";
-import {
-  validatePassword,
-  getPasswordErrorMessage,
-} from "../utils/validations";
+import React, { useState } from 'react';
+import { useAuth } from '../context/AuthContext';
+import { updateProfile } from '../api/auth';
+import { User } from 'lucide-react';
+import { validatePassword, getPasswordErrorMessage } from '../utils/validations';
 
 const Profile = () => {
   const { user, updateUser } = useAuth();
   const [formData, setFormData] = useState({
-    username: user?.username || "",
-    password: "",
-    confirmPassword: "",
+    username: user?.username || '',
+    password: '',
+    confirmPassword: '',
   });
   const [errors, setErrors] = useState({
-    password: "",
-    confirmPassword: "",
-    general: "",
+    password: '',
+    confirmPassword: '',
+    general: ''
   });
-  const [success, setSuccess] = useState("");
+  const [success, setSuccess] = useState('');
 
   const validateForm = (): boolean => {
     const newErrors = {
-      password: "",
-      confirmPassword: "",
-      general: "",
+      password: '',
+      confirmPassword: '',
+      general: ''
     };
     let isValid = true;
 
@@ -36,7 +33,7 @@ const Profile = () => {
       }
 
       if (formData.password !== formData.confirmPassword) {
-        newErrors.confirmPassword = "Passwords do not match";
+        newErrors.confirmPassword = 'Passwords do not match';
         isValid = false;
       }
     }
@@ -47,8 +44,8 @@ const Profile = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setErrors({ password: "", confirmPassword: "", general: "" });
-    setSuccess("");
+    setErrors({ password: '', confirmPassword: '', general: '' });
+    setSuccess('');
 
     if (!validateForm()) return;
 
@@ -63,12 +60,12 @@ const Profile = () => {
 
       const updatedUser = await updateProfile(updateData, user.token);
       updateUser({ ...user, ...updatedUser });
-      setSuccess("Profile updated successfully");
-      setFormData((prev) => ({ ...prev, password: "", confirmPassword: "" }));
+      setSuccess('Profile updated successfully');
+      setFormData(prev => ({ ...prev, password: '', confirmPassword: '' }));
     } catch (err: any) {
-      setErrors((prev) => ({
+      setErrors(prev => ({
         ...prev,
-        general: err.response?.data?.message || "Failed to update profile",
+        general: err.response?.data?.message || 'Failed to update profile'
       }));
     }
   };
@@ -77,7 +74,7 @@ const Profile = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     // Clear errors when user starts typing
     if (e.target.name in errors) {
-      setErrors((prev) => ({ ...prev, [e.target.name]: "" }));
+      setErrors(prev => ({ ...prev, [e.target.name]: '' }));
     }
   };
 
@@ -107,10 +104,7 @@ const Profile = () => {
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label
-                  htmlFor="username"
-                  className="block text-sm font-medium text-gray-700"
-                >
+                <label htmlFor="username" className="block text-sm font-medium text-gray-700">
                   Username
                 </label>
                 <input
@@ -125,29 +119,21 @@ const Profile = () => {
               </div>
 
               <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-gray-700"
-                >
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                   Email
                 </label>
                 <input
                   type="email"
                   id="email"
-                  value={user?.email || ""}
+                  value={user?.email || ''}
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-50 sm:text-sm"
                   disabled
                 />
-                <p className="mt-1 text-sm text-gray-500">
-                  Email cannot be changed
-                </p>
+                <p className="mt-1 text-sm text-gray-500">Email cannot be changed</p>
               </div>
 
               <div>
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium text-gray-700"
-                >
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                   New Password
                 </label>
                 <input
@@ -164,10 +150,7 @@ const Profile = () => {
               </div>
 
               <div>
-                <label
-                  htmlFor="confirmPassword"
-                  className="block text-sm font-medium text-gray-700"
-                >
+                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
                   Confirm New Password
                 </label>
                 <input
@@ -179,9 +162,7 @@ const Profile = () => {
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
                 {errors.confirmPassword && (
-                  <p className="mt-1 text-sm text-red-600">
-                    {errors.confirmPassword}
-                  </p>
+                  <p className="mt-1 text-sm text-red-600">{errors.confirmPassword}</p>
                 )}
               </div>
 

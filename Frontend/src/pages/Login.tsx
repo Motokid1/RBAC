@@ -1,38 +1,36 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { LogIn } from "lucide-react";
-import { login } from "../api/auth";
-import { useAuth } from "../context/AuthContext";
-import type { LoginData } from "../types/auth";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { LogIn } from 'lucide-react';
+import { login } from '../api/auth';
+import { useAuth } from '../context/AuthContext';
+import type { LoginData } from '../types/auth';
 
 const Login = () => {
   const [formData, setFormData] = useState<LoginData>({
-    email: "",
-    password: "",
+    email: '',
+    password: ''
   });
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const navigate = useNavigate();
   const { login: authLogin } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
-
+    setError('');
+    
     try {
       const userData = await login(formData);
       authLogin(userData);
-      navigate("/dashboard");
+      navigate('/dashboard');
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "An error occurred during login"
-      );
+      setError(err instanceof Error ? err.message : 'An error occurred during login');
     }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData((prev) => ({
+    setFormData(prev => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value
     }));
   };
 

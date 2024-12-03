@@ -1,15 +1,15 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "./context/AuthContext";
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Dashboard from "./pages/Dashboard";
-import Profile from "./pages/Profile";
-import PrivateRoute from "./components/PrivateRoute";
-import PublicRoute from "./components/PublicRoute";
-import Navbar from "./components/Navbar";
-import { useAuth } from "./context/AuthContext";
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import Home from './pages/Home';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Dashboard from './pages/Dashboard';
+import Profile from './pages/Profile';
+import PrivateRoute from './components/PrivateRoute';
+import PublicRoute from './components/PublicRoute';
+import Navbar from './components/Navbar';
+import { useAuth } from './context/AuthContext';
 
 // AppContent component handles the main application layout and routing
 const AppContent = () => {
@@ -19,7 +19,7 @@ const AppContent = () => {
     <div className="min-h-screen bg-gray-100">
       {/* Show navbar only when user is authenticated */}
       {isAuthenticated && <Navbar />}
-
+      
       {/* Application routes */}
       <Routes>
         {/* Public routes with authentication check */}
@@ -47,7 +47,7 @@ const AppContent = () => {
             </PublicRoute>
           }
         />
-
+        
         {/* Protected routes */}
         <Route
           path="/dashboard"

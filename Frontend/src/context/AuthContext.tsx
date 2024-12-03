@@ -1,13 +1,7 @@
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  useCallback,
-} from "react";
-import { useNavigate } from "react-router-dom";
-import { SESSION_TIMEOUT } from "../config/env";
-import type { User } from "../types/auth";
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { SESSION_TIMEOUT } from '../config/env';
+import type { User } from '../types/auth';
 
 // Define the shape of our authentication context
 interface AuthContextType {
@@ -22,14 +16,10 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // AuthProvider component to wrap the app and provide authentication state
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [sessionTimeout, setSessionTimeout] = useState<NodeJS.Timeout | null>(
-    null
-  );
+  const [sessionTimeout, setSessionTimeout] = useState<NodeJS.Timeout | null>(null);
   const navigate = useNavigate();
 
   // Reset session timeout when user is active
@@ -37,34 +27,34 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     if (sessionTimeout) {
       clearTimeout(sessionTimeout);
     }
-
+    
     // Set new timeout based on environment configuration
     const timeout = setTimeout(() => {
       logout();
-      navigate("/login");
+      navigate('/login');
     }, SESSION_TIMEOUT);
-
+    
     setSessionTimeout(timeout);
   }, [sessionTimeout, navigate]);
 
   // Initialize auth state from localStorage and set up activity listeners
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
+    const storedUser = localStorage.getItem('user');
     if (storedUser) {
       setUser(JSON.parse(storedUser));
       setIsAuthenticated(true);
       resetSessionTimeout();
     }
 
-    const events = ["mousedown", "keydown", "scroll", "touchstart"];
-
+    const events = ['mousedown', 'keydown', 'scroll', 'touchstart'];
+    
     const resetOnActivity = () => {
       if (isAuthenticated) {
         resetSessionTimeout();
       }
     };
 
-    events.forEach((event) => {
+    events.forEach(event => {
       window.addEventListener(event, resetOnActivity);
     });
 
@@ -72,7 +62,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       if (sessionTimeout) {
         clearTimeout(sessionTimeout);
       }
-      events.forEach((event) => {
+      events.forEach(event => {
         window.removeEventListener(event, resetOnActivity);
       });
     };
@@ -81,14 +71,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const login = (userData: User) => {
     setUser(userData);
     setIsAuthenticated(true);
-    localStorage.setItem("user", JSON.stringify(userData));
+    localStorage.setItem('user', JSON.stringify(userData));
     resetSessionTimeout();
   };
 
   const logout = () => {
     setUser(null);
     setIsAuthenticated(false);
-    localStorage.removeItem("user");
+    localStorage.removeItem('user');
     if (sessionTimeout) {
       clearTimeout(sessionTimeout);
     }
@@ -97,13 +87,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const updateUser = (userData: Partial<User>) => {
     const updatedUser = { ...user, ...userData } as User;
     setUser(updatedUser);
-    localStorage.setItem("user", JSON.stringify(updatedUser));
+    localStorage.setItem('user', JSON.stringify(updatedUser));
   };
 
   return (
-    <AuthContext.Provider
-      value={{ user, login, logout, updateUser, isAuthenticated }}
-    >
+    <AuthContext.Provider value={{ user, login, logout, updateUser, isAuthenticated }}>
       {children}
     </AuthContext.Provider>
   );
@@ -113,7 +101,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
+    throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
 };

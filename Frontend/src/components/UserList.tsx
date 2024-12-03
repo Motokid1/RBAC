@@ -1,22 +1,18 @@
-import React from "react";
-import { Trash2 } from "lucide-react";
-import { User } from "../types/auth";
-import { getRoleColor } from "../utils/roleUtils";
+import React from 'react';
+import { Trash2 } from 'lucide-react';
+import { User } from '../types/auth';
+import { getRoleColor } from '../utils/roleUtils';
 
 // Props interface for UserList component
 interface UserListProps {
-  users: User[]; // Array of users to display
-  onDeleteUser: (userId: string) => void; // Callback for user deletion
-  canDelete: boolean; // Permission flag for delete action
+  users: User[];                           // Array of users to display
+  onDeleteUser: (userId: string) => void;  // Callback for user deletion
+  canDelete: boolean;                      // Permission flag for delete action
 }
 
 // UserList component displays a table of users with their details
 // Includes delete functionality for authorized users
-const UserList: React.FC<UserListProps> = ({
-  users,
-  onDeleteUser,
-  canDelete,
-}) => {
+const UserList: React.FC<UserListProps> = ({ users, onDeleteUser, canDelete }) => {
   return (
     <div className="bg-white shadow-md rounded-lg overflow-hidden">
       <table className="min-w-full divide-y divide-gray-200">

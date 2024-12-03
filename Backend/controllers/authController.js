@@ -1,10 +1,10 @@
-import jwt from "jsonwebtoken";
-import User from "../models/User.js";
+import jwt from 'jsonwebtoken';
+import User from '../models/User.js';
 
 // Generate JWT token for authentication
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: "1m", // Token expires in 1 minute
+    expiresIn: '1m', // Token expires in 1 minute
   });
 };
 
@@ -16,7 +16,7 @@ export const register = async (req, res) => {
     // Check if user already exists
     const userExists = await User.findOne({ email });
     if (userExists) {
-      return res.status(400).json({ message: "User already exists" });
+      return res.status(400).json({ message: 'User already exists' });
     }
 
     // Create new user
@@ -24,7 +24,7 @@ export const register = async (req, res) => {
       username,
       email,
       password,
-      role: role || "user", // Default to 'user' if no role specified
+      role: role || 'user', // Default to 'user' if no role specified
     });
 
     // Generate token and send response
@@ -50,12 +50,12 @@ export const login = async (req, res) => {
     // Find user and verify credentials
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(401).json({ message: "Invalid credentials" });
+      return res.status(401).json({ message: 'Invalid credentials' });
     }
 
     const isMatch = await user.comparePassword(password);
     if (!isMatch) {
-      return res.status(401).json({ message: "Invalid credentials" });
+      return res.status(401).json({ message: 'Invalid credentials' });
     }
 
     // Generate token and send response
