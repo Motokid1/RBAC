@@ -12,6 +12,7 @@ const app = express();
 
 // CORS configuration
 const corsOptions = {
+<<<<<<< HEAD
   origin: "*", // Allow all origins
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allowed methods
   allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
@@ -21,6 +22,17 @@ const corsOptions = {
 
 // Middleware
 app.use(cors(corsOptions)); // Enable CORS with options
+=======
+  origin: 'http://127.0.0.1:5173', // Allow only the specific frontend origin
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allow necessary HTTP methods
+  allowedHeaders: ['Content-Type', 'Authorization'], // Allow necessary headers
+  preflightContinue: false, // Prevent continuing after handling preflight request
+  optionsSuccessStatus: 200, // Response status for successful OPTIONS request
+};
+
+// Middleware
+app.use(cors(corsOptions)); // Enable CORS with custom options
+>>>>>>> ad7c9d3fb9046bc8b7651d9e98cb6a3f9d0576e7
 app.use(express.json()); // Parse JSON request bodies
 
 // Health check endpoint
